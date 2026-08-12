@@ -1,0 +1,40 @@
+{
+  "name": "saqala",
+  "version": "1.0.0",
+  "description": "Saqala — Local Project Scaffolding & Dynamic Template Dashboard",
+  "main": "server.js",
+  "bin": {
+    "saqala": "./server.js"
+  },
+  "preferGlobal": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "commonjs",
+  "files": [
+    "server.js",
+    "templates.js",
+    "generators.js",
+    "index.html",
+    "styles.css",
+    "app.js",
+    "templates/"
+  ],
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "saqala",
+    "scaffold",
+    "generator",
+    "vite",
+    "react",
+    "node",
+    "express",
+    "fastify",
+    "dashboard",
+    "cli"
+  ],
+  "author": "Hamed",
+  "license": "GPL-3.0-only"
+}

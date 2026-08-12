@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saqala — Local Project Workspace & Scaffold Center</title>
+    <meta name="description" content="Saqala: Local project management dashboard, scaffolding zip templates, and custom generator hub." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true">
+      <div class="bg-grid"></div>
+      <div class="bg-glow"></div>
+    </div>
+
+    <!-- Sticky Topbar Header -->
+    <header class="topbar">
+      <div class="logo">
+        <span class="logo-mark">&gt;_</span>
+        <span class="logo-name">Saqala</span>
+        <span class="logo-version">v1.0</span>
+      </div>
+      <div class="topbar-right">
+        <div class="status">
+          <span class="led" aria-hidden="true"></span>
+          <span id="status-text">Workspace Connected</span>
+        </div>
+        <button class="btn-primary" id="btn-create-main" type="button">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Create New</span>
+        </button>
+
+        <!-- Inline Floating Header Dropdown Menu -->
+        <div id="dropdown-create-menu" class="header-dropdown" hidden>
+          <button class="drop-item" id="drop-opt-wizard" type="button">
+            <div class="drop-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
+            <span>Create Template Wizard</span>
+          </button>
+
+          <button class="drop-item" id="drop-opt-browse" type="button">
+            <div class="drop-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </div>
+            <span>Browse Templates</span>
+          </button>
+
+          <div class="drop-divider"></div>
+          <div class="drop-section-title">Recently Used Templates</div>
+          <div id="recent-templates-list" class="recent-tpl-list">
+            <div style="font-size: 0.8rem; color: var(--text-muted); padding: 0.2rem 0.5rem;">No recent templates used yet.</div>
+          </div>
+        </div>
+
+        <!-- Settings Gear Button -->
+        <button class="btn-icon" id="btn-settings" type="button" title="Settings" aria-label="Open Settings">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <!-- ============ Adaptive Screen 1: Welcome Hero (0 Projects) ============ -->
+      <section id="screen-hero" class="screen" aria-labelledby="hero-title" hidden>
+        <p class="terminal-line" aria-hidden="true">
+          <span class="prompt">$</span>
+          <span id="typed-line">saqala --welcome</span>
+          <span class="cursor" aria-hidden="true"></span>
+        </p>
+        <h1 id="hero-title" class="home-title">
+          Welcome to <span class="accent">Saqala</span>
+        </h1>
+        <p class="home-desc">
+          Your local project workspace and scaffold center. Create projects instantly from templates or interactive generators directly in your workspace.
+        </p>
+
+        <div class="cards" id="hero-template-cards" role="list"></div>
+      </section>
+
+      <!-- ============ Adaptive Screen 2: Active Dashboard ============ -->
+      <section id="screen-dashboard" class="screen" aria-labelledby="dash-title" hidden>
+        <div class="dashboard-header">
+          <div>
+            <h1 id="dash-title" class="dash-title">Workspace Dashboard</h1>
+            <p class="dash-sub">Manage active projects, extract zip templates, and run script generators.</p>
+          </div>
+        </div>
+
+        <!-- Section A: Active Projects -->
+        <div class="section-block">
+          <div class="section-head">
+            <div class="section-title-wrap">
+              <h2 class="section-title">
+                <span class="section-line" aria-hidden="true"></span>
+                Projects
+                <span class="count-pill" id="projects-count">0</span>
+              </h2>
+            </div>
+            <div class="search-filter-wrap">
+              <div class="search-box">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input id="project-search" type="text" placeholder="Search projects..." />
+              </div>
+              <select id="project-filter" class="filter-select">
+                <option value="all">All Types</option>
+                <option value="node">Node.js</option>
+                <option value="react">React</option>
+                <option value="vite">Vite</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+          </div>
+          <div id="projects-grid" class="projects-grid"></div>
+        </div>
+
+        <!-- Section B: Templates & Generators (Sorted A-Z) -->
+        <div class="section-block" id="templates-section">
+          <div class="section-head">
+            <div class="section-title-wrap">
+              <h2 class="section-title">
+                <span class="section-line" aria-hidden="true"></span>
+                Templates & Generators
+              </h2>
+            </div>
+            <div class="search-filter-wrap">
+              <div class="search-box">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input id="template-search" type="text" placeholder="Search templates..." />
+              </div>
+            </div>
+          </div>
+          <div id="dashboard-template-cards" class="cards" role="list"></div>
+        </div>
+      </section>
+
+      <!-- ============ Screen 3: Dedicated Template Wizard Screen ============ -->
+      <section id="screen-wizard" class="screen" aria-labelledby="wiz-screen-title" hidden>
+        <button class="back-btn" id="btn-wizard-back" type="button">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Back to Dashboard
+        </button>
+
+        <div class="wizard-container">
+          <div class="term-head" style="margin-bottom: 1.5rem;">
+            <div>
+              <h2 id="wiz-screen-title" class="screen-title">Create Template Wizard</h2>
+              <p class="screen-desc">
+                Define a reusable local folder template or a CLI script generator with real-time command variables.
+              </p>
+            </div>
+          </div>
+
+          <div class="wizard-tabs">
+            <button class="wizard-tab active" id="tab-btn-directory" type="button">From Local Directory</button>
+            <button class="wizard-tab" id="tab-btn-cli" type="button">From CLI Command Script</button>
+          </div>
+
+          <!-- Mode 1: From Existing Local Directory (Pure Directory Form) -->
+          <form id="form-wizard-directory" class="modal-body">
+            <div class="form-group">
+              <label for="wiz-dir-name">Template Name</label>
+              <input id="wiz-dir-name" type="text" placeholder="e.g. Express API Starter" required />
+            </div>
+            <div class="form-group">
+              <label for="wiz-dir-id">Template ID (Primary Index Identifier)</label>
+              <input id="wiz-dir-id" type="text" placeholder="e.g. express-api" required />
+              <small class="form-hint">Unique key used for template indexing and folder naming.</small>
+            </div>
+            <div class="form-group">
+              <label for="wiz-dir-desc">Description</label>
+              <input id="wiz-dir-desc" type="text" placeholder="Brief template description" />
+            </div>
+            <div class="form-group">
+              <label>Target Local Directory Path</label>
+              <div class="path-preview-box" id="wiz-dir-path-preview">
+                .saqala/templates/my-template/
+              </div>
+              <small class="form-hint">Place your template files in this workspace folder. Saqala will copy & extract them when scaffolding.</small>
+            </div>
+            <div class="modal-foot">
+              <button class="btn-primary" type="submit">Create Template Folder</button>
+            </div>
+          </form>
+
+          <!-- Mode 2: From CLI Command Script (Pure CLI Generator Form) -->
+          <form id="form-wizard-cli" class="modal-body" style="display: none;">
+            <div class="form-group">
+              <label for="wiz-cli-name">Generator Name</label>
+              <input id="wiz-cli-name" type="text" placeholder="e.g. Next.js App" required />
+            </div>
+            <div class="form-group">
+              <label for="wiz-cli-id">Template ID (Primary Index Identifier)</label>
+              <input id="wiz-cli-id" type="text" placeholder="e.g. nextjs-app" required />
+              <small class="form-hint">Unique key used for indexing this generator.</small>
+            </div>
+
+            <div class="syntax-example-box">
+              <div class="example-title">Command Syntax Example & Variables</div>
+              <div class="example-code">
+                npx create-next-app@latest {{name}} --ts={{useTs}} --template={{templateType}}
+              </div>
+              <small class="form-hint" style="margin-top: 0.4rem; display: block;">
+                Use <code>{{varName}}</code> or <code>__varName__</code> to define dynamic variables. <code>name</code> is pre-linked as the project directory name.
+              </small>
+            </div>
+
+            <div class="form-group">
+              <label for="wiz-cli-cmd">CLI Command String</label>
+              <input id="wiz-cli-cmd" type="text" placeholder="npx create-next-app@latest {{name}} --ts={{useTs}}" required />
+            </div>
+
+            <div class="form-group">
+              <label for="wiz-cli-run-cmd">Dev / Run Command</label>
+              <input id="wiz-cli-run-cmd" type="text" placeholder="npm run dev" value="npm run dev" required />
+              <small class="form-hint">Command executed when clicking "Run" on generated project cards (e.g. <code>npm run dev</code> or <code>node index.js</code>).</small>
+            </div>
+
+            <!-- Auto-extracted Variables Settings Container -->
+            <div id="cli-vars-container" class="vars-config-list"></div>
+
+            <div class="form-group" style="margin-top: 1rem;">
+              <label for="wiz-cli-desc">Description</label>
+              <input id="wiz-cli-desc" type="text" placeholder="Custom CLI generator script description" />
+            </div>
+
+            <div class="modal-foot">
+              <button class="btn-primary" type="submit">Save Generator</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ============ Creation / Terminal Screen ============ -->
+      <section id="screen-term" class="screen" aria-labelledby="term-title" hidden>
+        <button class="back-btn" data-back="home">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Back
+        </button>
+
+        <div class="term-head">
+          <div>
+            <h2 id="term-title" class="screen-title">
+              Create Project <span id="term-template-name" class="accent"></span>
+            </h2>
+            <p class="screen-desc">
+              Specify project parameters below. Saqala will initialize your project inside your active workspace directory.
+            </p>
+          </div>
+        </div>
+
+        <div class="builder">
+          <div class="builder-row" id="builder-fields-container">
+            <div class="name-field">
+              <label for="project-name">Directory / Project Name</label>
+              <input id="project-name" type="text" value="my-app" spellcheck="false" autocomplete="off" placeholder="e.g. lesson-01" />
+            </div>
+            <div class="lang-options mini" id="lang-picker-wrap">
+              <button class="lang-card js-lang" data-lang="js" type="button">
+                <span class="lang-badge js">JS</span>
+                <span class="lang-info"><span class="lang-name">JavaScript</span></span>
+              </button>
+              <button class="lang-card ts-lang" data-lang="ts" type="button">
+                <span class="lang-badge ts">TS</span>
+                <span class="lang-info"><span class="lang-name">TypeScript</span></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Variables Input Section for Generators -->
+          <div id="dynamic-vars-form-container" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.25rem;"></div>
+
+          <div class="cmd-preview">
+            <span class="cmd-preview-label">Generator Command</span>
+            <code id="cmd-preview-code" dir="ltr"></code>
+            <button class="icon-btn" id="copy-cmd-btn" type="button" aria-label="Copy command">
+              <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+                <rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
+                <path d="M5 15V5a2 2 0 0 1 2-2h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="builder-actions">
+            <button id="create-btn" class="btn-primary" type="button">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span class="btn-text">Create Project</span>
+            </button>
+            <button class="btn-ghost" id="term-stop-btn" type="button" disabled>
+              <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+                <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" />
+              </svg>
+              Stop
+            </button>
+          </div>
+        </div>
+
+        <div class="terminal term-console" dir="ltr">
+          <div class="terminal-bar">
+            <span class="dot red"></span>
+            <span class="dot amber"></span>
+            <span class="dot green"></span>
+            <span class="terminal-title" id="term-title-bar">CLI Process Output</span>
+          </div>
+          <div class="term-view-wrap">
+            <pre class="term-view" id="term-view" dir="ltr"><code id="term-content" class="term-content"></code></pre>
+            <div class="term-input-row">
+              <span class="term-prompt">&gt;</span>
+              <input
+                id="term-input"
+                class="term-input"
+                type="text"
+                autocomplete="off"
+                spellcheck="false"
+                disabled
+                placeholder="Interactive prompt input..."
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="term-status" id="term-status">
+          <span class="term-status-dot" aria-hidden="true"></span>
+          <span id="term-status-text">Awaiting execution</span>
+        </div>
+      </section>
+    </main>
+
+      <!-- ============ Screen: Project Detail ============ -->
+      <section id="screen-project" class="screen" hidden>
+        <div class="detail-back-bar">
+          <button class="back-btn" id="project-detail-back" type="button">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Back to Dashboard
+          </button>
+        </div>
+
+        <div class="detail-header">
+          <div class="detail-title-row">
+            <span id="detail-icon"></span>
+            <h2 id="detail-name" class="detail-name"></h2>
+            <span id="detail-badge" class="tpl-badge"></span>
+            <span id="detail-lang" class="lang-pill"></span>
+          </div>
+          <div class="detail-actions">
+            <button class="btn-icon" id="detail-refresh" title="Refresh file tree" type="button">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </button>
+            <button class="project-run" id="detail-run-btn" type="button">
+              <svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+              <span>Run</span>
+            </button>
+            <div class="ide-btn-wrap">
+              <button class="btn-secondary" id="detail-ide-btn" type="button">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9l3 3-3 3M13 15h3"/></svg>
+                Open in IDE
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div id="ide-dropdown" class="ide-dropdown" hidden></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-layout">
+          <!-- File Tree Panel -->
+          <div class="detail-tree-panel">
+            <div class="panel-title">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h5l2-2h9a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/></svg>
+              Files
+            </div>
+            <div id="file-tree" class="file-tree"></div>
+          </div>
+
+          <!-- Log Panel -->
+          <div class="detail-log-panel">
+            <div class="panel-title">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m8 10 2 2-2 2M12 14h4"/></svg>
+              Run Output
+              <span id="log-status-dot" class="log-status-dot" data-running="false"></span>
+              <span id="log-status-text" style="font-size:0.75rem;color:var(--text-muted)">Stopped</span>
+            </div>
+            <pre id="project-log" class="project-log-pre">No output yet. Run the project to see logs here.</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Screen: Settings ============ -->
+      <section id="screen-settings" class="screen" hidden>
+        <div class="detail-back-bar">
+          <button class="back-btn" id="settings-back" type="button">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            Back to Dashboard
+          </button>
+        </div>
+        <div class="settings-container">
+          <h2 class="settings-title">⚙ Settings</h2>
+
+          <section class="settings-section">
+            <h3 class="settings-section-title">IDE Preferences</h3>
+            <p class="settings-desc">Choose your default IDE and manage launch commands.</p>
+
+            <div class="settings-row">
+              <label for="default-ide-select">Default IDE</label>
+              <select id="default-ide-select"></select>
+            </div>
+
+            <div id="ide-list" class="ide-list"></div>
+
+            <div class="settings-add-ide">
+              <h4>Add Custom IDE</h4>
+              <div class="settings-add-row">
+                <input type="text" id="new-ide-name" placeholder="e.g. Sublime Text" />
+                <input type="text" id="new-ide-command" placeholder="e.g. subl ./" />
+                <button class="btn-primary" id="btn-add-ide" type="button">Add IDE</button>
+              </div>
+              <p class="settings-hint">Command runs in the project directory. Use <code>./</code> for current dir (e.g. <code>code ./</code>).</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+    <footer>
+      <p>
+        <span class="logo-mark">&gt;_</span> All projects are created as native directories inside your active workspace.
+      </p>
+    </footer>
+
+    <!-- ============ Modal: Project Details ============ -->
+    <div id="project-modal" class="modal" hidden aria-hidden="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-head">
+          <div>
+            <h3 id="modal-title">Project Details</h3>
+            <p id="modal-sub" class="modal-sub"></p>
+          </div>
+          <button class="modal-close" data-close aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body" id="modal-body-content"></div>
+      </div>
+    </div>
+
+    <div id="toast-wrap" class="toast-wrap" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

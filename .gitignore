@@ -1,0 +1,8 @@
+node_modules/
+projects/
+.saqala/
+*.log
+.DS_Store
+.env
+.env.local
+curl-impersonate*
