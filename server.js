@@ -89,10 +89,10 @@ function readBody(req) {
 /* ---------- Path Security & Input Hardening ---------- */
 function cleanProjectName(name) {
   if (!name || typeof name !== "string") return null;
-  const raw = name.trim().toLowerCase();
-  const cleaned = raw.replace(/\s+/g, "-").replace(/[^a-z0-9._-]/g, "-").replace(/^-+|-+$/g, "");
+  const raw = name.trim();
+  const cleaned = raw.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9._-]/g, "-").replace(/^-+|-+$/g, "");
   if (!cleaned || cleaned === "." || cleaned === ".." || cleaned.includes("..")) return null;
-  if (!/^[a-z0-9][a-z0-9._-]{0,63}$/.test(cleaned)) return null;
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/.test(cleaned)) return null;
   return cleaned;
 }
 

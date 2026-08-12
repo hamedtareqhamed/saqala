@@ -1,6 +1,6 @@
 {
   "name": "saqala",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Saqala — Local Project Scaffolding & Dynamic Template Dashboard",
   "main": "server.js",
   "bin": {
